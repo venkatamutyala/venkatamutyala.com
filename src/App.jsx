@@ -111,17 +111,24 @@ export default function App() {
 
   const stripHtml = (html) => {
     if (!html) return '';
-    // Use a more secure approach - replace HTML tags with empty strings
-    return html
-      .replace(/<script[^>]*>.*?<\/script>/gi, '') // Remove script tags first
-      .replace(/<style[^>]*>.*?<\/style>/gi, '') // Remove style tags
-      .replace(/<[^>]+>/g, '') // Remove all other HTML tags
-      .replace(/&nbsp;/g, ' ') // Replace HTML entities
-      .replace(/&amp;/g, '&')
+    
+    // If it contains HTML tags, don't process it
+    // RSS feeds should provide content_text for plain text content
+    if (/<[^>]+>/.test(html)) {
+      return '';
+    }
+    
+    // Only decode HTML entities for plain text content
+    // Use a safe decoding order to avoid double-escaping issues
+    const decoded = html
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .trim();
+      .replace(/&amp;/g, '&'); // Decode &amp; last to avoid double-decoding
+    
+    return decoded.trim();
   };
 
   // Get current active feed data from cache
