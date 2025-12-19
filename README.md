@@ -1,3 +1,4 @@
+# venkatamutyala.com RSS Feed Reader
 # venkatamutyala.com
 
 A modern, responsive RSS feed reader built with React, Vite, and Tailwind CSS. This single-page application aggregates and displays multiple RSS feeds in an elegant card-based layout.
