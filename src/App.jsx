@@ -6,6 +6,7 @@ const INITIAL_FEEDS = [
   { id: '2', name: 'Feed 2', url: 'https://rss.app/feeds/v1.1/_CWNS5Ow7U6sibU2i.json' },
   { id: '3', name: 'Feed 3', url: 'https://rss.app/feeds/v1.1/_sQFQUxzLwF8DlCgT.json' },
   { id: '4', name: 'Feed 4', url: 'https://rss.app/feeds/v1.1/_hSO6WVRr2FWVZBzm.json' },
+  { id: '5', name: 'Feed 5', url: 'https://rss.app/feeds/v1.1/YhetfKRWyDHRgnvF.json' },
 ];
 
 export default function App() {
