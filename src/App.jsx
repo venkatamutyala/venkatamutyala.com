@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Clock, RefreshCw, AlertCircle, ChevronRight, Newspaper, Calendar, Layers, Moon, Sun } from 'lucide-react';
+import { ExternalLink, Clock, RefreshCw, AlertCircle, ChevronRight, Newspaper, Calendar, Layers, Moon, Sun, Linkedin, Github, Phone, Mail } from 'lucide-react';
 
 const INITIAL_FEEDS = [
   { id: '1', name: 'Feed 1', url: 'https://rss.app/feeds/v1.1/_IVI6PHx4cd522mFt.json' },
@@ -115,6 +115,55 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans transition-colors">
+      {/* Contact Info Bar */}
+      <div className="bg-blue-600 dark:bg-blue-700 text-white py-3 transition-colors">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <p className="text-sm">
+              These are the various feeds I subscribe to in order to stay up to date.
+            </p>
+            <div className="flex items-center gap-3 text-sm">
+              <a 
+                href="https://linkedin.com/in/venkatamutyala" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 hover:text-blue-100 transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-4 h-4" />
+                <span className="hidden sm:inline">LinkedIn</span>
+              </a>
+              <a 
+                href="https://github.com/venkatamutyala" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 hover:text-blue-100 transition-colors"
+                aria-label="GitHub"
+              >
+                <Github className="w-4 h-4" />
+                <span className="hidden sm:inline">GitHub</span>
+              </a>
+              <a 
+                href="mailto:venkata@venkatamutyala.com" 
+                className="flex items-center gap-1.5 hover:text-blue-100 transition-colors"
+                aria-label="Email"
+              >
+                <Mail className="w-4 h-4" />
+                <span className="hidden sm:inline">Email</span>
+              </a>
+              <a 
+                href="tel:+1-517-VEN-KATA" 
+                className="flex items-center gap-1.5 hover:text-blue-100 transition-colors"
+                aria-label="Phone"
+              >
+                <Phone className="w-4 h-4" />
+                <span className="hidden sm:inline">+1 517-VEN-KATA</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
