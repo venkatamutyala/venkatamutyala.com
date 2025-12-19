@@ -214,7 +214,6 @@ export default function App() {
         {items.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((item, index) => {
-              const imageUrl = getImageUrl(item);
               const date = item.date_published || item.pubDate;
               const content = item.content_text || item.description || stripHtml(item.content_html);
 
@@ -223,27 +222,6 @@ export default function App() {
                   key={item.id || item.guid || index} 
                   className="group flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow duration-300"
                 >
-                  {/* Image Area */}
-                  <a href={item.url || item.link} target="_blank" rel="noopener noreferrer" className="relative block h-48 overflow-hidden bg-slate-100 dark:bg-slate-700">
-                    {imageUrl ? (
-                      <img 
-                        src={imageUrl} 
-                        alt="" 
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.parentElement.classList.add('flex', 'items-center', 'justify-center');
-                          e.target.parentElement.innerHTML = '<div class="text-slate-400"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>';
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
-                        <Newspaper className="w-12 h-12" />
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </a>
-
                   {/* Content Area */}
                   <div className="flex-1 p-5 flex flex-col">
                     
@@ -253,11 +231,6 @@ export default function App() {
                         <span className="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-md">
                           <Calendar className="w-3 h-3" />
                           {formatDate(date)}
-                        </span>
-                      )}
-                      {item.author && (
-                        <span className="truncate max-w-[120px]">
-                          • {item.author.name || item.author}
                         </span>
                       )}
                     </div>
@@ -282,7 +255,7 @@ export default function App() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                       >
-                        Read Article
+                        {(item.authors && item.authors[0]?.name) || item.author?.name || item.author || 'Read Article'}
                         <ChevronRight className="w-4 h-4" />
                       </a>
                       <ExternalLink className="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-400 transition-colors" />
