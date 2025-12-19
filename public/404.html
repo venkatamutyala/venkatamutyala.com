@@ -10,7 +10,11 @@
       // string into just a query string, and then redirects the browser
       // to the new url with only a query string and hash fragment,
       // which will be redirected to the index.html page
-      var pathSegmentsToKeep = 1; // Keep '/venkatamutyala.com' segment
+      
+      // pathSegmentsToKeep should match the number of segments in the repository path
+      // For GitHub Pages project sites: https://username.github.io/repo-name/
+      // Set to 1 to keep the '/venkatamutyala.com' segment
+      var pathSegmentsToKeep = 1;
 
       var l = window.location;
       l.replace(
