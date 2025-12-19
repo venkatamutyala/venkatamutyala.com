@@ -1,5 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Clock, RefreshCw, AlertCircle, ChevronRight, Newspaper, Calendar, Layers } from 'lucide-react';
+import { ExternalLink, Clock, RefreshCw, AlertCircle, ChevronRight, Newspaper, Calendar, Layers, Image } from 'lucide-react';
+
+// Image component with fallback handling
+function ArticleImage({ src, alt }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (!src || hasError) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-slate-300">
+        <Image className="w-12 h-12" />
+      </div>
+    );
+  }
+
+  return (
+    <img 
+      src={src} 
+      alt={alt} 
+      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      onError={() => setHasError(true)}
+    />
+  );
+}
 
 const INITIAL_FEEDS = [
   { id: '1', name: 'Feed 1', url: 'https://rss.app/feeds/v1.1/_IVI6PHx4cd522mFt.json' },
@@ -89,9 +111,17 @@ export default function App() {
 
   const stripHtml = (html) => {
     if (!html) return '';
-    const tmp = document.createElement("DIV");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
+    // Use a more secure approach - replace HTML tags with empty strings
+    return html
+      .replace(/<script[^>]*>.*?<\/script>/gi, '') // Remove script tags first
+      .replace(/<style[^>]*>.*?<\/style>/gi, '') // Remove style tags
+      .replace(/<[^>]+>/g, '') // Remove all other HTML tags
+      .replace(/&nbsp;/g, ' ') // Replace HTML entities
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .trim();
   };
 
   // Get current active feed data from cache
@@ -204,22 +234,7 @@ export default function App() {
                 >
                   {/* Image Area */}
                   <a href={item.url || item.link} target="_blank" rel="noopener noreferrer" className="relative block h-48 overflow-hidden bg-slate-100">
-                    {imageUrl ? (
-                      <img 
-                        src={imageUrl} 
-                        alt="" 
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.parentElement.classList.add('flex', 'items-center', 'justify-center');
-                          e.target.parentElement.innerHTML = '<div class="text-slate-400"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>';
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-300">
-                        <Newspaper className="w-12 h-12" />
-                      </div>
-                    )}
+                    <ArticleImage src={imageUrl} alt={item.title || ''} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
 
