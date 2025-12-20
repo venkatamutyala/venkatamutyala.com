@@ -2,15 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { ExternalLink, Clock, RefreshCw, AlertCircle, ChevronRight, Newspaper, Calendar, Layers, Moon, Sun, Linkedin, Github, Phone, Mail } from 'lucide-react';
 
 const INITIAL_FEEDS = [
-  { id: '1', name: 'Feed 1', url: 'https://rss.app/feeds/v1.1/_IVI6PHx4cd522mFt.json' },
-  { id: '2', name: 'Feed 2', url: 'https://rss.app/feeds/v1.1/_CWNS5Ow7U6sibU2i.json' },
-  { id: '3', name: 'Feed 3', url: 'https://rss.app/feeds/v1.1/_sQFQUxzLwF8DlCgT.json' },
-  { id: '4', name: 'Feed 4', url: 'https://rss.app/feeds/v1.1/_hSO6WVRr2FWVZBzm.json' },
-  { id: '5', name: 'Feed 5', url: 'https://rss.app/feeds/v1.1/YhetfKRWyDHRgnvF.json' },
+  'https://rss.app/feeds/v1.1/_MzDbCZQhk1JNI0T4.json',
+  'https://rss.app/feeds/v1.1/_pSfpwCVBiXyiC8OX.json',
+  'https://rss.app/feeds/v1.1/_muBY3IBPymkaXfIL.json',
+  'https://rss.app/feeds/v1.1/_8d7YCaSDZsN1hBrX.json',
+  'https://rss.app/feeds/v1.1/_Bgt29T7gFAR8KQCX.json',
+  'https://rss.app/feeds/v1.1/_hSO6WVRr2FWVZBzm.json',
+  'https://rss.app/feeds/v1.1/YhetfKRWyDHRgnvF.json',
+  'https://rss.app/feeds/v1.1/_IVI6PHx4cd522mFt.json',
+  'https://rss.app/feeds/v1.1/_CWNS5Ow7U6sibU2i.json',
+  'https://rss.app/feeds/v1.1/_sQFQUxzLwF8DlCgT.json',
 ];
 
 export default function App() {
-  const [activeFeedId, setActiveFeedId] = useState(INITIAL_FEEDS[0].id);
+  const [activeFeedId, setActiveFeedId] = useState(0);
   const [feedCache, setFeedCache] = useState({});
   const [globalLoading, setGlobalLoading] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
@@ -28,13 +33,13 @@ export default function App() {
   const fetchAllFeeds = async () => {
     setGlobalLoading(true);
     
-    const promises = INITIAL_FEEDS.map(async (feed) => {
+    const promises = INITIAL_FEEDS.map(async (url, index) => {
       try {
-        const response = await fetch(feed.url);
+        const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch');
         const data = await response.json();
         return {
-          id: feed.id,
+          id: index,
           success: true,
           data: {
             ...data,
@@ -42,9 +47,9 @@ export default function App() {
           }
         };
       } catch (err) {
-        console.error(`Error fetching feed ${feed.id}:`, err);
+        console.error(`Error fetching feed ${index}:`, err);
         return {
-          id: feed.id,
+          id: index,
           success: false,
           error: 'Failed to load feed'
         };
@@ -62,7 +67,7 @@ export default function App() {
         newCache[result.id] = {
           error: result.error,
           items: [],
-          title: INITIAL_FEEDS.find(f => f.id === result.id).name
+          title: `Feed ${result.id + 1}`
         };
       }
     });
@@ -111,7 +116,7 @@ export default function App() {
   const items = activeFeedData?.items || [];
   const error = activeFeedData?.error;
   const lastUpdated = activeFeedData?.lastUpdated;
-  const currentTitle = activeFeedData?.title || INITIAL_FEEDS.find(f => f.id === activeFeedId).name;
+  const currentTitle = activeFeedData?.title || `Feed ${activeFeedId + 1}`;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans transition-colors">
@@ -196,29 +201,27 @@ export default function App() {
             </div>
           </div>
 
-          {/* Feed Selector Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 no-scrollbar">
-            <Layers className="w-4 h-4 text-slate-400 dark:text-slate-500 mr-2 flex-shrink-0" />
-            {INITIAL_FEEDS.map((feed) => {
-              const cachedFeed = feedCache[feed.id];
-              const displayName = cachedFeed?.title || feed.name;
-              
-              return (
-                <button
-                  key={feed.id}
-                  onClick={() => setActiveFeedId(feed.id)}
-                  className={`
-                    whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex-shrink-0 max-w-[200px] truncate
-                    ${activeFeedId === feed.id 
-                      ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-md shadow-blue-200 dark:shadow-blue-900' 
-                      : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:border-blue-300 dark:hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400'
-                    }
-                  `}
-                >
-                  {displayName}
-                </button>
-              );
-            })}
+          {/* Feed Selector Dropdown */}
+          <div className="flex items-center gap-3">
+            <Layers className="w-4 h-4 text-slate-400 dark:text-slate-500 flex-shrink-0" />
+            <select
+              value={activeFeedId}
+              onChange={(e) => setActiveFeedId(Number(e.target.value))}
+              className="flex-1 sm:flex-initial sm:min-w-[300px] px-4 py-2 text-sm font-medium bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 rounded-lg hover:border-blue-400 dark:hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors cursor-pointer"
+            >
+              {INITIAL_FEEDS.map((url, index) => {
+                const cachedFeed = feedCache[index];
+                const displayName = cachedFeed?.title || `Feed ${index + 1}`;
+                return (
+                  <option key={index} value={index}>
+                    {displayName}
+                  </option>
+                );
+              })}
+            </select>
+            <span className="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline">
+              {activeFeedId + 1} of {INITIAL_FEEDS.length}
+            </span>
           </div>
         </div>
       </header>
