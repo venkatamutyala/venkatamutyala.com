@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Clock, RefreshCw, AlertCircle, ChevronRight, Newspaper, Calendar, Layers, Moon, Sun, Linkedin, Github, Phone, Mail } from 'lucide-react';
+import { ExternalLink, Clock, RefreshCw, AlertCircle, ChevronRight, Newspaper, Calendar, Layers, Moon, Sun, Linkedin, Github, Phone, Mail, Play, Pause } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 const INITIAL_FEEDS = [
   'https://rss.app/feeds/v1.1/_MzDbCZQhk1JNI0T4.json',
@@ -19,6 +20,8 @@ export default function App() {
   const [feedCache, setFeedCache] = useState({});
   const [globalLoading, setGlobalLoading] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
+  const [isAutoRotating, setIsAutoRotating] = useState(false);
+  const [rotationProgress, setRotationProgress] = useState(0);
 
   useEffect(() => {
     if (darkMode) {
@@ -79,6 +82,37 @@ export default function App() {
   useEffect(() => {
     fetchAllFeeds();
   }, []);
+
+  // Auto-rotation effect
+  useEffect(() => {
+    if (!isAutoRotating) return;
+
+    const rotationInterval = setInterval(() => {
+      setActiveFeedId((prev) => (prev + 1) % INITIAL_FEEDS.length);
+      setRotationProgress(0);
+    }, 30000);
+
+    return () => clearInterval(rotationInterval);
+  }, [isAutoRotating]);
+
+  // Progress tracking effect
+  useEffect(() => {
+    if (!isAutoRotating) {
+      setRotationProgress(0);
+      return;
+    }
+
+    const progressInterval = setInterval(() => {
+      setRotationProgress((prev) => {
+        if (prev >= 100) return 0;
+        return prev + (100 / 300); // 30 seconds = 300 * 100ms
+      });
+    }, 100);
+
+    return () => clearInterval(progressInterval);
+  }, [isAutoRotating]);
+
+  const toggleAutoRotation = () => setIsAutoRotating(!isAutoRotating);
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -184,6 +218,13 @@ export default function App() {
             
             <div className="self-end sm:self-auto flex items-center gap-2">
               <button 
+                onClick={toggleAutoRotation}
+                className="flex items-center justify-center p-2 text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+                aria-label={isAutoRotating ? "Pause auto-rotation" : "Resume auto-rotation"}
+              >
+                {isAutoRotating ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              </button>
+              <button 
                 onClick={toggleDarkMode}
                 className="flex items-center justify-center p-2 text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                 aria-label="Toggle dark mode"
@@ -224,6 +265,16 @@ export default function App() {
             </span>
           </div>
         </div>
+        
+        {/* Auto-rotation Progress Bar */}
+        {isAutoRotating && (
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-slate-200 dark:bg-slate-700">
+            <div 
+              className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-100 ease-linear"
+              style={{ width: `${rotationProgress}%` }}
+            />
+          </div>
+        )}
       </header>
 
       {/* Main Content */}
@@ -278,12 +329,25 @@ export default function App() {
                   <div className="flex-1 p-5 flex flex-col">
                     
                     {/* Meta */}
-                    <div className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 mb-3">
-                      {date && (
-                        <span className="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-md">
-                          <Calendar className="w-3 h-3" />
-                          {formatDate(date)}
-                        </span>
+                    <div className="flex items-center justify-between gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 mb-3">
+                      <div className="flex items-center gap-2">
+                        {date && (
+                          <span className="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-md">
+                            <Calendar className="w-3 h-3" />
+                            {formatDate(date)}
+                          </span>
+                        )}
+                      </div>
+                      {(item.url || item.link) && (
+                        <div className="flex-shrink-0 bg-white dark:bg-slate-900 p-1 rounded">
+                          <QRCodeCanvas 
+                            value={item.url || item.link}
+                            size={48}
+                            level="M"
+                            bgColor={darkMode ? "#0f172a" : "#ffffff"}
+                            fgColor={darkMode ? "#ffffff" : "#000000"}
+                          />
+                        </div>
                       )}
                     </div>
 
