@@ -153,10 +153,10 @@ export default function App() {
   const currentTitle = activeFeedData?.title || `Feed ${activeFeedId + 1}`;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans transition-colors">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-200 font-sans transition-colors">
       {/* Contact Info Bar */}
       <div className="bg-blue-600 dark:bg-blue-700 text-white py-3 transition-colors">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="max-w-[98%] mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <p className="text-sm">
               These are the various feeds I subscribe to in order to stay up to date.
@@ -205,7 +205,7 @@ export default function App() {
 
       {/* Header */}
       <header className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm transition-colors">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
+        <div className="max-w-[98%] mx-auto px-4 sm:px-6 py-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3 sm:mb-0">
             <div className="flex items-center gap-2">
               <div className="bg-blue-600 p-2 rounded-lg">
@@ -278,7 +278,7 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <main className="max-w-[98%] mx-auto px-4 sm:px-6 py-8">
         
         {/* Error State */}
         {error && (
@@ -291,9 +291,9 @@ export default function App() {
 
         {/* Global Loading State Skeleton (Only on first load) */}
         {globalLoading && !activeFeedData && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white dark:bg-slate-800 rounded-xl shadow-sm overflow-hidden h-96 animate-pulse">
+              <div key={i} className="bg-white dark:bg-slate-800/50 rounded-xl shadow-sm overflow-hidden h-96 animate-pulse">
                 <div className="h-48 bg-slate-200 dark:bg-slate-700" />
                 <div className="p-5 space-y-4">
                   <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4" />
@@ -315,7 +315,7 @@ export default function App() {
 
         {/* Feed Grid */}
         {items.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             {items.map((item, index) => {
               const date = item.date_published || item.pubDate;
               const content = item.content_text || item.description || stripHtml(item.content_html);
@@ -323,13 +323,13 @@ export default function App() {
               return (
                 <article 
                   key={item.id || item.guid || index} 
-                  className="group flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md dark:hover:shadow-slate-900/50 transition-shadow duration-300"
+                  className="group flex flex-col bg-white dark:bg-slate-800/50 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700/50 overflow-hidden hover:shadow-md dark:hover:shadow-slate-900/50 hover:border-slate-200 dark:hover:border-slate-600 transition-all duration-300"
                 >
                   {/* Content Area */}
                   <div className="flex-1 p-5 flex flex-col">
                     
                     {/* Meta */}
-                    <div className="flex items-center justify-between gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 mb-3">
+                    <div className="flex items-center justify-between gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 mb-2">
                       <div className="flex items-center gap-2">
                         {date && (
                           <span className="flex items-center gap-1 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-md">
@@ -352,19 +352,19 @@ export default function App() {
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    <h2 className="text-base font-extrabold text-slate-800 dark:text-slate-100 leading-tight mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       <a href={item.url || item.link} target="_blank" rel="noopener noreferrer">
                         {item.title}
                       </a>
                     </h2>
 
                     {/* Excerpt */}
-                    <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed line-clamp-3 mb-4 flex-1">
+                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed line-clamp-3 mb-3 flex-1">
                       {content}
                     </p>
 
                     {/* Footer */}
-                    <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                    <div className="pt-3 mt-auto border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
                       <a 
                         href={item.url || item.link} 
                         target="_blank" 
