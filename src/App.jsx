@@ -159,7 +159,7 @@ export default function App() {
         <div className="max-w-[98%] mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <p className="text-sm">
-              These are the various feeds I subscribe to in order to stay up to date.
+              <strong>This website is in BETA.</strong> These are the various feeds I subscribe to in order to stay up to date. <br /><strong>Known issues:</strong> Some feeds may be missing data due to upstream API data quality issues.
             </p>
             <div className="flex items-center gap-3 text-sm">
               <a 
